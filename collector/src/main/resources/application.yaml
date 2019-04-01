@@ -1,0 +1,8 @@
+grpc:
+  port: 9000
+
+redis:
+  host: "localhost"
+  port: 9379
+
+topic: "temperature_reading"

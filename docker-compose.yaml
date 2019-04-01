@@ -1,0 +1,47 @@
+version: "3.5"
+services:
+  timescaledb:
+    image: "timescale/timescaledb:1.1.0-pg10"
+    ports:
+      - "54321:5432"
+    environment:
+      - POSTGRES_DB=sepet
+      - POSTGRES_USER=sepet
+      - POSTGRES_PASSWORD=sepet
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+  redis:
+    image: "redis:5.0.3"
+    ports:
+      - "9379:6379"
+  collector:
+    build:
+      context: .
+      dockerfile: "collector.Dockerfile"
+    ports:
+      - "9000:9000"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+  server:
+    build:
+      context: .
+      dockerfile: "server.Dockerfile"
+    ports:
+      - "8081:8081"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://timescaledb:5432/sepet
+    depends_on:
+      - redis
+      - timescaledb
+  simulator:
+    build:
+      context: .
+      dockerfile: "simulator.Dockerfile"
+    depends_on:
+      - collector
+    command: '-n 50 -h collector -p 9000'

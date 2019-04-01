@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package com.serdarormanli.sepet.grpc;
+option java_multiple_files = true;
+
+service TemperatureService {
+    rpc SendTemperatureReading (stream TemperatureReadingRequest) returns (stream TemperatureReadingResponse) {
+    }
+}
+
+message TemperatureReadingRequest {
+    google.protobuf.Timestamp time = 1;
+    string machine_id = 2;
+    double temperature = 3;
+}
+
+message TemperatureReadingResponse {
+    string id = 1;
+}
+
+message TemperatureReading {
+    google.protobuf.Timestamp time = 1;
+    string message_id = 2;
+    string machine_id = 3;
+    double temperature = 4;
+}
