@@ -13,8 +13,8 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <picocli.version>3.9.0</picocli.version>
-        <assertj-core.version>3.12.1</assertj-core.version>
+        <picocli.version>4.2.0</picocli.version>
+        <assertj-core.version>3.16.1</assertj-core.version>
     </properties>
     <dependencies>
         <dependency>

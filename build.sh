@@ -11,7 +11,7 @@ docker run \
   -v ${MAVEN_DIR}:/root/.m2 \
   -v ${PWD}:/src \
   --entrypoint="sh" \
- maven:3.6.0-jdk-11-slim \
+ maven:3-openjdk-14-slim \
   -c "mvn -f /src/pom.xml clean package"
 
 docker-compose build
