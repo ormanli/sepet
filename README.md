@@ -2,7 +2,7 @@
 
 An example system simulating some thermometers sending temperature metrics. It is also possible to query these statistics for a given timespan.
 
-![diagram](diagram.jpg)
+![diagram](diagram.png)
 
 Info
 ====
@@ -22,7 +22,7 @@ Used Technologies
 ====
 * Docker
 * Docker Compose
-* Java 11
+* Java 14
 * Spring Boot 2
 * Redis
 * gRPC

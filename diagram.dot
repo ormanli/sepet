@@ -1,0 +1,38 @@
+digraph root {
+	fontcolor="#2D3436";
+	fontname="Sans-Serif";
+	fontsize=13;
+	label=Sepet;
+	nodesep=0.6;
+	pad=2;
+	rankdir=LR;
+	ranksep=0.75;
+	splines=ortho;
+	lptdodfe->enaawidv[ color="#7B8894", dir=forward, fontcolor="#2D3436", fontname="Sans-Serif", fontsize=13, label=Publish ];
+	enaawidv->izurthtm[ color="#7B8894", dir=forward, fontcolor="#2D3436", fontname="Sans-Serif", fontsize=13, label=Subscribe ];
+	izurthtm->ogrunrnx[ color="#7B8894", dir=forward, fontcolor="#2D3436", fontname="Sans-Serif", fontsize=13, label=JDBC ];
+	fohhxzpj->lptdodfe[ color="#7B8894", dir=forward, fontcolor="#2D3436", fontname="Sans-Serif", fontsize=13, label="gRPC stream" ];
+	vnpctgep->lptdodfe[ color="#7B8894", dir=forward, fontcolor="#2D3436", fontname="Sans-Serif", fontsize=13, label="gRPC stream" ];
+	szhxjyhk->lptdodfe[ color="#7B8894", dir=forward, fontcolor="#2D3436", fontname="Sans-Serif", fontsize=13, label="gRPC stream" ];
+	subgraph cluster_simulators {
+	bgcolor="#E5F5FD";
+	fontcolor="#2D3436";
+	fontname="Sans-Serif";
+	fontsize=12;
+	label=Simulators;
+	labeljust=l;
+	pencolor="#AEB6BE";
+	shape=box;
+	style=rounded;
+	fohhxzpj [ fixedsize=true, fontcolor="#2D3436", fontname="Sans-Serif", fontsize=13, height=1.7999999999999998, image="assets/apps/client/client.png", imagescale=true, label="Simulator 1", labelloc=b, shape=none, style=rounded, width=1.4 ];
+	szhxjyhk [ fixedsize=true, fontcolor="#2D3436", fontname="Sans-Serif", fontsize=13, height=1.7999999999999998, image="assets/apps/client/client.png", imagescale=true, label="Simulator N", labelloc=b, shape=none, style=rounded, width=1.4 ];
+	vnpctgep [ fixedsize=true, fontcolor="#2D3436", fontname="Sans-Serif", fontsize=13, height=1.7999999999999998, image="assets/apps/client/client.png", imagescale=true, label="Simulator 2", labelloc=b, shape=none, style=rounded, width=1.4 ];
+
+}
+;
+	enaawidv [ fixedsize=true, fontcolor="#2D3436", fontname="Sans-Serif", fontsize=13, height=1.7999999999999998, image="assets/apps/inmemory/redis.png", imagescale=true, label="Pub/Sub", labelloc=b, shape=none, style=rounded, width=1.4 ];
+	izurthtm [ fixedsize=true, fontcolor="#2D3436", fontname="Sans-Serif", fontsize=13, height=1.7999999999999998, image="assets/apps/compute/server.png", imagescale=true, label=Server, labelloc=b, shape=none, style=rounded, width=1.4 ];
+	lptdodfe [ fixedsize=true, fontcolor="#2D3436", fontname="Sans-Serif", fontsize=13, height=1.7999999999999998, image="assets/apps/compute/server.png", imagescale=true, label=Collector, labelloc=b, shape=none, style=rounded, width=1.4 ];
+	ogrunrnx [ fixedsize=true, fontcolor="#2D3436", fontname="Sans-Serif", fontsize=13, height=1.7999999999999998, image="assets/generic/database/sql.png", imagescale=true, label=TimescaleDB, labelloc=b, shape=none, style=rounded, width=1.4 ];
+
+}
