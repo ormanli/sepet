@@ -1,15 +1,14 @@
 package com.serdarormanli.sepet.server.model;
 
+import lombok.Data;
+
 import java.math.BigDecimal;
 
-public interface Statistic {
-    String getMachineId();
-
-    BigDecimal getMinimum();
-
-    BigDecimal getMaximum();
-
-    BigDecimal getAverage();
-
-    BigDecimal getMedian();
+@Data
+public class Statistic {
+    private String machineId;
+    private BigDecimal minimum;
+    private BigDecimal maximum;
+    private BigDecimal average;
+    private BigDecimal median;
 }

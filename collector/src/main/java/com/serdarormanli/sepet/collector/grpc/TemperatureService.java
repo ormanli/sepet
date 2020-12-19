@@ -19,7 +19,7 @@ public class TemperatureService extends TemperatureServiceGrpc.TemperatureServic
         return new StreamObserver<>() {
             @Override
             public void onNext(TemperatureReadingRequest temperatureReadingRequest) {
-                var temperatureReadingResponse = senderService.send(temperatureReadingRequest);
+                var temperatureReadingResponse = TemperatureService.this.senderService.send(temperatureReadingRequest);
 
                 responseObserver.onNext(temperatureReadingResponse);
             }

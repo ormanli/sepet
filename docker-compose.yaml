@@ -1,7 +1,7 @@
 version: "3.5"
 services:
   timescaledb:
-    image: "timescale/timescaledb:1.1.0-pg10"
+    image: "timescale/timescaledb:1.7.4-pg12"
     ports:
       - "54321:5432"
     environment:
@@ -11,7 +11,7 @@ services:
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
   redis:
-    image: "redis:5.0.3"
+    image: "redis:6-alpine"
     ports:
       - "9379:6379"
   collector:
@@ -21,8 +21,8 @@ services:
     ports:
       - "9000:9000"
     environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
+      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
     depends_on:
       - redis
   server:
@@ -32,9 +32,9 @@ services:
     ports:
       - "8081:8081"
     environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://timescaledb:5432/sepet
+      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
+      - SPRING_R2DBC_URL=r2dbc:postgresql://timescaledb:5432/sepet
     depends_on:
       - redis
       - timescaledb

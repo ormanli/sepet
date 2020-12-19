@@ -1,4 +1,4 @@
-FROM openjdk:14-slim
+FROM adoptopenjdk/openjdk15:alpine-jre
 
 WORKDIR /collector
 

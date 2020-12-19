@@ -22,7 +22,7 @@ public class SenderServiceImpl implements SenderService {
         var builder = TemperatureReadingResponse.newBuilder();
 
         if (StringUtils.isNotBlank(request.getMachineId())) {
-            var id = timeBasedGenerator.generate().toString();
+            var id = this.timeBasedGenerator.generate().toString();
 
             var byteArray = TemperatureReading.newBuilder()
                     .setMessageId(id)
@@ -32,7 +32,7 @@ public class SenderServiceImpl implements SenderService {
                     .build()
                     .toByteArray();
 
-            redisOperations.convertAndSend(topic.getTopic(), byteArray);
+            this.redisOperations.convertAndSend(this.topic.getTopic(), byteArray);
 
             builder.setId(id);
         }

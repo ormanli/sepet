@@ -22,8 +22,9 @@ Used Technologies
 ====
 * Docker
 * Docker Compose
-* Java 14
+* Java 15
 * Spring Boot 2
+* Spring Webflux
 * Redis
 * gRPC
 * TimescaleDB

@@ -6,8 +6,9 @@ import java.math.BigDecimal;
 
 @Value
 public class ReadingStatistic {
-    private BigDecimal minimum;
-    private BigDecimal maximum;
-    private BigDecimal average;
-    private BigDecimal median;
+    String machineId;
+    BigDecimal minimum;
+    BigDecimal maximum;
+    BigDecimal average;
+    BigDecimal median;
 }

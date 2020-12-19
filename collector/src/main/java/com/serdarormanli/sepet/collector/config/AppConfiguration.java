@@ -9,22 +9,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
-import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.Topic;
+import org.springframework.data.redis.serializer.RedisSerializer;
 
 @Configuration
 public class AppConfiguration {
 
     @Value("${grpc.port}")
     private int grpcPort;
-    @Value("${redis.host}")
-    private String redisHost;
-    @Value("${redis.port}")
-    private int redisPort;
     @Value("${topic}")
     private String topic;
 
@@ -35,27 +30,22 @@ public class AppConfiguration {
 
     @Bean
     public ServerBuilder serverBuilder() {
-        return ServerBuilder.forPort(grpcPort);
+        return ServerBuilder.forPort(this.grpcPort);
     }
 
     @Bean
-    public RedisConnectionFactory lettuceConnectionFactory() {
-        return new LettuceConnectionFactory(new RedisStandaloneConfiguration(redisHost, redisPort));
-    }
+    public RedisOperations<String, byte[]> redisOperations(RedisConnectionFactory redisConnectionFactory) {
+        var template = new RedisTemplate<String, byte[]>();
 
-    @Bean
-    public RedisOperations<String, byte[]> redisTemplate(RedisConnectionFactory lettuceConnectionFactory) {
-        RedisTemplate<String, byte[]> template = new RedisTemplate<>();
-
-        template.setConnectionFactory(lettuceConnectionFactory);
-        template.setValueSerializer(new ByteSerializer());
+        template.setConnectionFactory(redisConnectionFactory);
+        template.setValueSerializer(RedisSerializer.byteArray());
 
         return template;
     }
 
     @Bean
     public Topic topic() {
-        return new ChannelTopic(topic);
+        return new ChannelTopic(this.topic);
     }
 
     @Bean

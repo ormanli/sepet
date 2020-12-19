@@ -4,52 +4,57 @@ import com.serdarormanli.sepet.grpc.TemperatureReading;
 import com.serdarormanli.sepet.server.dto.Query;
 import com.serdarormanli.sepet.server.dto.ReadingStatistic;
 import com.serdarormanli.sepet.server.model.Reading;
-import com.serdarormanli.sepet.server.model.ReadingKey;
 import com.serdarormanli.sepet.server.model.Statistic;
 import com.serdarormanli.sepet.server.repository.ReadingRepository;
+import de.huxhorn.sulky.ulid.ULID;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import javax.validation.Valid;
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import static java.math.BigDecimal.valueOf;
 import static java.time.Instant.ofEpochSecond;
 
 @RequiredArgsConstructor
+@Validated
 public class ReadingServiceImpl implements ReadingService {
 
     private final ReadingRepository readingRepository;
+    private final ULID ulid = new ULID();
 
     @Override
-    public Reading saveReading(@NonNull TemperatureReading temperatureReading) {
+    public Mono<Reading> saveReading(@NonNull TemperatureReading temperatureReading) {
+        if (TemperatureReading.getDefaultInstance().equals(temperatureReading)) {
+            return Mono.empty();
+        }
+
         var reading = new Reading();
-        var readingKey = new ReadingKey();
 
-        readingKey.setMachineId(temperatureReading.getMachineId());
-        readingKey.setTime(ofEpochSecond(temperatureReading.getTime().getSeconds(), temperatureReading.getTime().getNanos()));
-        reading.setReadingKey(readingKey);
-        reading.setTemperature(BigDecimal.valueOf(temperatureReading.getTemperature()));
+        reading.setId(this.ulid.nextULID());
+        reading.setMachineId(temperatureReading.getMachineId());
+        reading.setTime(ofEpochSecond(temperatureReading.getTime().getSeconds(), temperatureReading.getTime().getNanos()));
+        reading.setTemperature(valueOf(temperatureReading.getTemperature()));
 
-        return readingRepository.saveAndFlush(reading);
+        return this.readingRepository.save(reading);
     }
 
     @Override
-    public Map<String, ReadingStatistic> queryStatistics(@NonNull @Valid Query query) {
-        var statistics = readingRepository.calculateStatistics(query.getStartDate(), query.getEndDate(), query.getMachineIds());
-
-        return statistics.stream()
-                .collect(Collectors.toMap(Statistic::getMachineId, this::readingStatistic));
+    public Flux<ReadingStatistic> queryStatistics(@NonNull Query query) {
+        return this.readingRepository.calculateStatistics(query.getStartDate(), query.getEndDate(), query.getMachineIds())
+                .map(this::readingStatistic);
     }
 
     @Override
-    public List<String> distinctMachineIds() {
-        return readingRepository.distinctMachineIds();
+    public Flux<String> distinctMachineIds() {
+        return this.readingRepository.distinctMachineIds();
     }
 
     private ReadingStatistic readingStatistic(Statistic statistic) {
-        return new ReadingStatistic(statistic.getMinimum(), statistic.getMaximum(), statistic.getAverage(), statistic.getMedian());
+        return new ReadingStatistic(statistic.getMachineId(),
+                statistic.getMinimum(),
+                statistic.getMaximum(),
+                statistic.getAverage(),
+                statistic.getMedian());
     }
 }

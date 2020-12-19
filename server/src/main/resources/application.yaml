@@ -1,19 +1,12 @@
-redis:
-  host: "localhost"
-  port: 9379
-
 topic: "temperature_reading"
 
 spring:
-  datasource:
+  r2dbc:
     username: sepet
     password: sepet
-    url: jdbc:postgresql://localhost:5432/sepet
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: none
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    url: r2dbc:postgresql://localhost:54321/sepet
+  redis:
+    port: 9379
 
 server:
   port: 8081

@@ -22,12 +22,12 @@ public class Main implements Runnable {
     private int port;
 
     public static void main(String[] args) {
-        CommandLine.run(new Main(), args);
+        new CommandLine(new Main()).execute(args);
     }
 
     @Override
     public void run() {
-        log.info(String.format("Trying to start %d simulator to call %s:%d", numberOfSimulators, host, port));
+        log.info("Trying to start %d simulator to call %s:%d".formatted(numberOfSimulators, host, port));
 
         var executor = Executors.newScheduledThreadPool(Math.max(numberOfSimulators / 4, 1));
 
@@ -38,7 +38,7 @@ public class Main implements Runnable {
         for (var i = 0; i < numberOfSimulators; i++) {
             var id = UUID.randomUUID().toString();
 
-            log.info(String.format("Simulator %s created", id));
+            log.info("Simulator %s created".formatted(id));
 
             var temperatureGenerator = new TemperatureGenerator(random.nextInt(5) + 5);
 

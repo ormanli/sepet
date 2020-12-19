@@ -2,21 +2,19 @@ package com.serdarormanli.sepet.server;
 
 import com.google.protobuf.Timestamp;
 import com.serdarormanli.sepet.grpc.TemperatureReading;
-import com.serdarormanli.sepet.server.listener.TemperatureListener;
 import com.serdarormanli.sepet.server.model.Reading;
-import com.serdarormanli.sepet.server.model.ReadingKey;
 import com.serdarormanli.sepet.server.repository.ReadingRepository;
+import com.serdarormanli.sepet.server.service.ReadingService;
 import com.serdarormanli.sepet.server.service.ReadingServiceImpl;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.data.redis.connection.DefaultMessage;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
@@ -26,12 +24,12 @@ import static org.mockito.Mockito.verify;
 public class ServerApplicationTests {
 
     private static ReadingRepository readingRepository;
-    private static TemperatureListener temperatureListener;
+    private static ReadingService readingService;
 
     @BeforeClass
     public static void setUp() {
         readingRepository = mock(ReadingRepository.class);
-        temperatureListener = new TemperatureListener(new ReadingServiceImpl(readingRepository));
+        readingService = new ReadingServiceImpl(readingRepository);
     }
 
     @After
@@ -52,16 +50,15 @@ public class ServerApplicationTests {
                 .setTemperature(3)
                 .build();
 
-        temperatureListener.onMessage(new DefaultMessage(new byte[0], reading.toByteArray()), null);
+        readingService.saveReading(reading);
 
         var expected = new Reading();
-        var readingKey = new ReadingKey();
-        readingKey.setTime(now);
-        readingKey.setMachineId("1");
+        expected.setTime(now);
+        expected.setMachineId("1");
         expected.setTemperature(BigDecimal.valueOf(3.0));
-        expected.setReadingKey(readingKey);
+        expected.setId("");
 
-        verify(readingRepository, times(1)).saveAndFlush(eq(expected));
+        verify(readingRepository, times(1)).save(refEq(expected, "id"));
     }
 
     @Test
@@ -69,9 +66,9 @@ public class ServerApplicationTests {
         var reading = TemperatureReading.newBuilder()
                 .build();
 
-        temperatureListener.onMessage(new DefaultMessage(new byte[0], reading.toByteArray()), null);
+        readingService.saveReading(reading);
 
-        verify(readingRepository, never()).saveAndFlush(any());
+        verify(readingRepository, never()).save(any());
     }
 }
 

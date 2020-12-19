@@ -4,14 +4,15 @@ import com.serdarormanli.sepet.grpc.TemperatureReading;
 import com.serdarormanli.sepet.server.dto.Query;
 import com.serdarormanli.sepet.server.dto.ReadingStatistic;
 import com.serdarormanli.sepet.server.model.Reading;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.util.List;
-import java.util.Map;
+import javax.validation.Valid;
 
 public interface ReadingService {
-    Reading saveReading(TemperatureReading temperatureReading);
+    Mono<Reading> saveReading(@Valid TemperatureReading temperatureReading);
 
-    Map<String, ReadingStatistic> queryStatistics(Query query);
+    Flux<ReadingStatistic> queryStatistics(Query query);
 
-    List<String> distinctMachineIds();
+    Flux<String> distinctMachineIds();
 }
